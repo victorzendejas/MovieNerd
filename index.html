@@ -3,41 +3,70 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>SD TopSpots</title>
+    <title>ToDo</title>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/animate.css/animate.css" />
     <link rel="stylesheet" href="bower_components/animated/animated.css" />
+    <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
     <link rel="stylesheet" href="/app/styles/styles.css">
 </head>
 
 <body>
 
-    <body ng-controller="TopSpotsController as vm">
-        <h1 align="center">San Diego Top Spots Angular</h1>
-        <div class="container">
-            <table class="table table-striped">
+    <body ng-controller="TodoController as vm">
+        <h1 align="center">FullStack To Do</h1>
+        <legend></legend>
+        <div class=" container col-xs-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Add to do item</div>
+                <div class="panel-body">
+                    <label>Text:</label>
+                    <input ng-model="vm.newTodo.task" type="text" class="form-control">
+                    <label>Priority:</label>
+                    <Select class="form-control" ng-model="vm.selectedlist">
+                        <option></option>
+                        <option class="danger" value="3">A Low Priority item</option>
+                        <option class="info" value="2">A Medium Priority item</option>
+                        <option class="warning" value="1">A High Priority Item</option>
+                    </Select>
+                </div>
+                <div class="panel-footer clearfix">
+                    <button ng-click="vm.addNewTask()" class="btn btn btn-primary">Add task</button>
+                </div>
+            </div>
+        </div>
+        <div class="btn-group" role="group">
+            <button class="btn btn-primary" ng-click="taskPriority = '+priority';">Order by highest priority</button>
+            <button class="btn btn-primary" ng-click="taskPriority = '-priority';">Order by lowest priority</button>
+            <button class="btn btn-primary" ng-click="taskPriority = 'name';">Order alphabetically</button>
+            <table class="table table-bordered">
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Location</th>
-                    </tr>
+                    <th>ID</th>
+                    <th>Task</th>
+                    <th>Priority</th>
+                    <th>Edit/Delete</th>
                 </thead>
-                <tbody>
-                    <!-- The ng-repeat directive repeats a set of HTML from a collection, a given number of times. In this case my data of SDtopspots which include the name of the location, description, and location(coordinates) -->
-                    <tr ng-repeat="data in vm.topspots">
-                        <td> {{data.name}}</td>
-                        <td> {{data.description}}</td>
-                        <!-- button-once you click it will forward user to google maps wth coordinates of location-->
-                        <td><a class="btn btn-primary" target="_blank" href="https://www.google.com/maps?q= {{data.location[0]}}, {{data.location[1]}}">Open in Google Maps</a></td>
-                    </tr>
+                <tbody ng-repeat="todo in vm.todos | orderBy:taskPriority">
+                    <!-- ng-class="{'bg-warning': todo.priority === '3', 'bg-info' : todo.priority === '2', 'bg-danger' : todo.priority === '1'}"
+ -->
+                    <td>{{todo.toDoID}}</td>
+                    <td>{{todo.name}}</td>
+                    <td>{{todo.priority}}</td>
+                    <td>
+                        <button ng-click="vm.updateTask(todo)" class="btn-warning">Edit</button>
+                        <button ng-click="vm.deleteTask(todo.toDoID)" class="btn-danger">Delete</button>
+                    </td>
                 </tbody>
             </table>
         </div>
+        <pre>{{vm.todos | json}}</pre>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+        <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
         <script src="bower_components/animated/animated.js"></script>
         <script src="/app/app.js"></script>
-        <script src="/app/topspots.controller.js"></script>
+        <script src="/app/todo.controller.js">
+        </script>
+        <script src="/app/todo.factory.js"></script>
     </body>
 
 </html>
